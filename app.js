@@ -13,7 +13,7 @@ require('./helpers/notification.helper');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -24,7 +24,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 require('./config/routes')(app);
 
 var dbname = app.get('dbname');
-mongoose.connect('mongodb://localhost/' + dbname, {
+var dbaddress = app.get('dbaddress');
+var mongoAddress = 'mongodb://' + dbaddress + '/' + dbname;
+debug(mongoAddress);
+mongoose.connect(mongoAddress, {
     user : app.get('dbuser'),
     pass : app.get('dbpwd'),
 });

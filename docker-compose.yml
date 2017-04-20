@@ -1,0 +1,26 @@
+version: '2.1'
+services:
+  app:
+    restart: always
+    image: nprail/rallly
+    ports:
+     - "3000:3000"
+    env_file:
+     - .env
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mongo
+    restart: always
+    ports:
+     - "27017:27017"
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.stats().ok' | mongo 127.0.0.1/test --quiet"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - /data/db
+      - /var/lib/mongodb
+      - /var/log/mongodb
